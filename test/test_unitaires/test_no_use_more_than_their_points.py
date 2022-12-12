@@ -1,5 +1,5 @@
-from P11 import server
 from P11.server import app
+
 
 class TestNoUseMoreThanTheirPoints:
 
@@ -19,10 +19,6 @@ class TestNoUseMoreThanTheirPoints:
             "points": "10"
         }
     ]
-
-    def setup_method(self):
-        server.competitions = self.competition
-        server.clubs = self.club
 
     def test_points_allowed(self):
         self.client.post(
