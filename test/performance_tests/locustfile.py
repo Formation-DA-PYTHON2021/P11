@@ -8,15 +8,24 @@ class ProjectPerfTest(HttpUser):
 
     def on_start(self):
         self.client.get("/")
-        self.client.post("/showSummary", data={'email': loadClubs()[0]["email"]})
+        self.client.post("/showSummary", data={'email': loadClubs()[0]["email"]}, name="showSummary")
 
     @task
-    def book_places(self):
+    def for_booking(self):
+        self.client.get(
+            f"/book/{loadCompetitions()[0]['name']}/{loadClubs()[0]['name']}",
+            name="/book/..."
+        )
+
+    @task
+    def after_booking(self):
         self.client.post(
             "/purchasePlaces",
             data={
                 "places": 0,
-                "club": loadClubs()[0]["name"],
-                "competition": loadCompetitions()[0]["name"]
-            }
+                "club": loadClubs()[0]['name'],
+                "competition": loadCompetitions()[0]['name']
+            },
+            name="/purchasePlaces"
         )
+
