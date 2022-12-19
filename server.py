@@ -31,7 +31,7 @@ clubs = loadClubs()
 places_booked = booked_places(competitions, clubs)
 
 
-def nomber_booked_places(competition, club, placesRequired):
+def nomber_booked_places(competition, club, places_booked, placesRequired):
     for i in places_booked:
         if i['competition'] == competition['name']:
             if i['booked'][1] == club['name'] and i['booked'][0] + placesRequired <= 12:
@@ -87,7 +87,7 @@ def purchasePlaces():
 
     else:
         try:
-            nomber_booked_places(competition, club, placesRequired)
+            nomber_booked_places(competition, club, places_booked, placesRequired)
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
             club['points'] = int(club['points']) - placesRequired
             flash('Great-booking complete!')
@@ -97,7 +97,10 @@ def purchasePlaces():
             return render_template('welcome.html', club=club, competitions=competitions), 403
 
 
-# TODO: Add route for points display
+@app.route('/viewClubsPoints')
+def view_clubs_points():
+    club_list = sorted(clubs, key=lambda club: club['name'])
+    return render_template('clubs_points.html', clubs=club_list)
 
 
 @app.route('/logout')
