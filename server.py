@@ -20,6 +20,7 @@ def booked_places(comps, clubs_list):
     for comp in comps:
         for club in clubs_list:
             places.append({'competition': comp['name'], 'booked': [0, club['name']]})
+    print('places: ', places)
     return places
 
 
@@ -31,15 +32,12 @@ clubs = loadClubs()
 places_booked = booked_places(competitions, clubs)
 
 
-def nomber_booked_places(competition, club, places_booked, placesRequired):
+def number_booked_places(competition, club, places_booked, placesRequired):
     for i in places_booked:
         if i['competition'] == competition['name']:
             if i['booked'][1] == club['name'] and i['booked'][0] + placesRequired <= 12:
                 i['booked'][0] += placesRequired
                 break
-            else:
-                raise ValueError("You can't book more than 12 places per competition.")
-
 
 
 @app.route('/')
@@ -81,20 +79,26 @@ def purchasePlaces():
         flash("Your don't have enough points.")
         return render_template('welcome.html', club=club, competitions=competitions), 403
 
+    if placesRequired > int(competition['numberOfPlaces']):
+        flash("'Not enough places available.")
+        return render_template('welcome.html', club=club, competitions=competitions), 403
+
     elif placesRequired > 12:
         flash("You can't book more than twelve place per competition")
         return render_template('welcome.html', club=club, competitions=competitions), 403
 
     else:
-        try:
-            nomber_booked_places(competition, club, places_booked, placesRequired)
-            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-            club['points'] = int(club['points']) - placesRequired
-            flash('Great-booking complete!')
-            return render_template('welcome.html', club=club, competitions=competitions)
-        except ValueError:
-            flash("You can't book more than twelve place per competition")
-            return render_template('welcome.html', club=club, competitions=competitions), 403
+        for i in places_booked:
+            if i['competition'] == competition['name']:
+                if i['booked'][1] == club['name'] and i['booked'][0] + placesRequired <= 12:
+                    number_booked_places(competition, club, places_booked, placesRequired)
+                    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+                    club['points'] = int(club['points']) - placesRequired
+                    flash('Great-booking complete!')
+                    return render_template('welcome.html', club=club, competitions=competitions)
+            else:
+                flash("You can't book more than twelve place per competition")
+                return render_template('welcome.html', club=club, competitions=competitions), 403
 
 
 @app.route('/viewClubsPoints')
