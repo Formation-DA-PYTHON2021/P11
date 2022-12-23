@@ -1,0 +1,14 @@
+table, td
+ {
+    border: 1px solid #333;
+    border-collapse: collapse;
+    padding: 15px;
+    text-align: center;
+}
+
+thead
+{
+    background-color: #333;
+    color: #FFE38A;
+    padding: 10px;
+}

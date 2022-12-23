@@ -9,8 +9,9 @@
     Please enter your secretary email to continue:
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
+        <input type="email" name="email" id="email"/>
         <button type="submit">Enter</button>
     </form>
+    <a href="{{ url_for('view_clubs_points') }}">View clubs points</a>
 </body>
 </html>
