@@ -20,7 +20,6 @@ def booked_places(comps, clubs_list):
     for comp in comps:
         for club in clubs_list:
             places.append({'competition': comp['name'], 'booked': [0, club['name']]})
-    print('places: ', places)
     return places
 
 
